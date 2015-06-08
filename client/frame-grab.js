@@ -324,11 +324,18 @@
         },
 
         _draw: function(video, canvas, opt_max_size) {
-            var context = canvas.getContext("2d"),
-                target_dim = {
-                    height: video.videoHeight,
-                    width: video.videoWidth
-                };
+            var context = canvas.getContext("2d");
+
+            if( this.pixel_data !== null && this.pixel_data !== undefined )
+            {
+              target_dim = this.pixel_data;
+            }
+            else {
+              target_dim = {
+                  height: video.videoHeight,
+                  width: video.videoWidth
+              };
+            }
 
             if (opt_max_size) {
                 target_dim = this._calculate_scaled_dimensions(video, opt_max_size);
@@ -596,6 +603,8 @@
         });
     };
 
+    this.FrameGrab.pixel_data = null;
+    
     this.FrameGrab.Error = function(message) {
         this.message = "[frame-grab]: " + message;
         console.error(this.message);
