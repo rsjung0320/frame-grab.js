@@ -45,8 +45,7 @@
                     });
                 });
 
-            // ex) pixel_data : {width:300, height:300}
-            this.grab = function(target_container, time, opt_max_size, pixel_data) {
+            this.grab = function(target_container, time, opt_max_size) {
                 if (typeof target_container === "string" &&
                     (target_container.toLowerCase() === "canvas" || target_container.toLowerCase() === "img")) {
 
@@ -85,14 +84,7 @@
                                 target_container.width = temp_canvas.width;
                                 target_container.height = temp_canvas.height;
 
-                                if(pixel_data !== null && pixel_data!== undefined && pixel_data !== '')
-                                {
-                                    target_context.drawImage(temp_canvas, 0, 0, pixel_data.width, pixel_data.height);
-                                }
-                                else
-                                {
-                                    target_context.drawImage(temp_canvas, 0, 0);
-                                }
+                                target_context.drawImage(temp_canvas, 0, 0);
 
                                 grab_deferred.resolve({time: result.time, container: target_container});
                             }
@@ -126,11 +118,11 @@
                 return grab_deferred.promise;
             };
 
-            this.grab_now = function(target_container, opt_max_size, pixel_data) {
+            this.grab_now = function(target_container, opt_max_size) {
                 var deferred = new RSVP.defer();
 
                 clone_ready.then(function() {
-                    this.grab(target_container, options.video.currentTime, opt_max_size, pixel_data).then(
+                    this.grab(target_container, options.video.currentTime, opt_max_size).then(
                         deferred.resolve,
                         deferred.reject
                     );
@@ -604,7 +596,7 @@
     };
 
     this.FrameGrab.pixel_data = null;
-    
+
     this.FrameGrab.Error = function(message) {
         this.message = "[frame-grab]: " + message;
         console.error(this.message);
